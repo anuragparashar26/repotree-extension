@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitHub Repo Tree Generator</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🌲 Repo Tree</h1>
+    </div>
+
+    <div id="loading" class="loading hidden">
+      <div class="spinner"></div>
+      <p>Generating tree...</p>
+    </div>
+
+    <div id="error" class="error hidden"></div>
+
+    <div id="success" class="success hidden"></div>
+
+    <div id="actions" class="actions">
+      <button id="copyBtn" class="btn btn-primary" disabled>
+        📋 Copy Tree
+      </button>
+      <button id="openBtn" class="btn btn-secondary" disabled>
+        🔗 Open in Generator
+      </button>
+    </div>
+
+    <div id="repoInfo" class="repo-info hidden">
+      <p id="repoName" class="repo-name"></p>
+      <p id="repoUrl" class="repo-url"></p>
+    </div>
+
+    <div id="preview" class="preview hidden">
+      <p class="preview-label">Preview:</p>
+      <pre id="previewContent" class="preview-content"></pre>
+    </div>
+
+    <footer class="footer">
+      <a href="https://github.com/anuragparashar26" target="_blank">
+        <u>Visit Developer's Github</u>
+      </a>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
