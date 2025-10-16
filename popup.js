@@ -27,14 +27,14 @@ async function initializeExtension() {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     
     if (!isGitHubRepoPage(tab.url)) {
-      showError('This extension only works on GitHub repository pages.');
+      showError('This extension only works on GitHub repository pages. Try the <a href="' + CONFIG.SITE_URL + '" target="_blank">generator site</a> instead.');
       disableActions();
       return;
     }
 
     const repoInfo = extractRepoInfo(tab.url);
     if (!repoInfo) {
-      showError('Could not extract repository information from this page.');
+      showError('Could not extract repository information from this page. Try the <a href="' + CONFIG.SITE_URL + '" target="_blank">generator site</a> instead.');
       disableActions();
       return;
     }
@@ -88,8 +88,13 @@ async function generateTree() {
     showPreview();
   } catch (error) {
     showLoading(false);
-    showError(`Failed to generate tree: ${error.message}`);
-    disableActions();
+    if (error.message.includes('rate limit')) {
+      disableCopyBtn();
+      showError('GitHub API rate limit exceeded. Please try again later or use the <a href="' + CONFIG.SITE_URL + '" target="_blank">generator site</a> with a token.');
+    } else {
+      disableActions();
+      showError(`Failed to generate tree: ${error.message} Try the <a href="${CONFIG.SITE_URL}" target="_blank">generator site</a>.`);
+    }
   }
 }
 
@@ -177,7 +182,7 @@ function showLoading(show) {
 }
 
 function showError(message) {
-  errorEl.textContent = message;
+  errorEl.innerHTML = message;
   errorEl.classList.remove('hidden');
 }
 
@@ -200,8 +205,12 @@ function enableActions() {
   openBtn.disabled = false;
 }
 
-function disableActions() {
+function disableCopyBtn() {
   copyBtn.disabled = true;
+}
+
+function disableActions() {
+  disableCopyBtn();
   openBtn.disabled = true;
 }
 
@@ -211,7 +220,7 @@ copyBtn.addEventListener('click', () => {
   navigator.clipboard.writeText(currentTree).then(() => {
     showSuccess('✓ Tree copied to clipboard!');
   }).catch(() => {
-    showError('Failed to copy to clipboard');
+    showError('Failed to copy to clipboard. Try the <a href="' + CONFIG.SITE_URL + '" target="_blank">generator site</a> instead.');
   });
 });
 
